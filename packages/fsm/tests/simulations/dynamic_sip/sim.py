@@ -1,3 +1,35 @@
+"""Dynamic SIP Simulation: Buy when market is oversold (RSI < 33).
+
+WHAT IT DOES
+------------
+This simulates a systematic investment strategy that accumulates cash in a liquid
+fund and deploys into NIFTYBEES only when the RSI indicates oversold conditions
+(< 33), with a 21-day cooldown between deployments.
+
+THE FOUR STATES
+---------------
+1. ACCUMULATING: Cash builds up in liquid fund (earning ~6% annually). 
+   Wait for RSI < 33 to transition to ARMED.
+
+2. ARMED: RSI < 33 and we can buy at least one unit. Deploy all cash into
+   equity immediately, then move to COOLDOWN.
+
+3. COOLDOWN: 21-day mandatory wait. If RSI still < 33 after 21 days → ARMED.
+   Otherwise → ACCUMULATING.
+
+4. DONE: Simulation complete. Calculate XIRR for performance measurement.
+
+KEY PARAMETERS
+--------------
+- MONTHLY_SIP: ₹10,000 fresh inflow at each month start
+- LIQUID_ANNUAL: ~6% interest earned on uninvested cash
+- RSI_THRESHOLD: < 33 triggers deployment opportunity
+- COOLDOWN_DAYS: 21 days minimum between deployments
+
+The simulation runs April 2006 - March 2026 (20 years) and computes annualized
+returns (XIRR) for performance analysis.
+"""
+
 from dataclasses import dataclass, replace
 from math import floor
 from typing import NamedTuple
@@ -35,7 +67,7 @@ class Portfolio:
 
 
 def daily_bookkeeping(ctx: Portfolio, ev: Event) -> Portfolio:
-    """Prepare context at start of each day: accrue interest, add SIP."""
+    """Accrue daily interest on cash, add monthly SIP inflows."""
     if ev.kind != "next_day":
         return ctx
     cash = ctx.cash * (1 + LIQUID_DAILY)
@@ -56,13 +88,13 @@ def rsi_below_threshold(ctx: Portfolio, ev: Event) -> bool:
 
 
 def can_buy_at_least_one_unit(ctx: Portfolio, ev: Event) -> bool:
-    """Check if we have enough cash to buy at least one unit."""
+    """Check sufficient cash to buy minimum one unit at current NAV."""
     nav = ev.payload.nav
     return nav > 0 and floor(ctx.cash / nav) >= 1
 
 
 def cooldown_elapsed(ctx: Portfolio, ev: Event) -> bool:
-    """21-day cooldown between deployments."""
+    """21-day minimum between deployments."""
     if ctx.last_deploy_day_idx is None:
         return True
     return ev.payload.day_idx - ctx.last_deploy_day_idx >= COOLDOWN_DAYS
@@ -94,9 +126,9 @@ def deploy_cash(ctx: Portfolio, ev: Event) -> Portfolio:
     )
 
 
-# -----------
-# State Chart
-# -----------
+# -------------------------------
+# State Chart (Fluent Style)
+# -------------------------------
 
 # Reusable guard combinations
 rsi_and_cash = where(rsi_below_threshold) & where(can_buy_at_least_one_unit)
@@ -117,8 +149,8 @@ STATES = {
         on={
             "next_day": [
                 Transition("cooldown")
-                .when(where(can_buy_at_least_one_unit))
-                .then(deploy_cash),
+                    .when(where(can_buy_at_least_one_unit))
+                    .then(deploy_cash),
                 Transition("armed").internal_only(),
             ],
             "end": Transition("done"),
@@ -139,6 +171,7 @@ STATES = {
 
 
 def build_machine(ctx: Portfolio) -> Machine[Portfolio]:
+    """Build a type-safe FSM for the dynamic SIP strategy."""
     return Machine[Portfolio](
         initial="accumulating",
         context=ctx,
