@@ -1,7 +1,28 @@
 [project]
 name = "rebalanced-fsm"
 version = "0.1.0"
+description = "A data-first, type-safe finite state machine library for Python 3.14+"
+readme = "README.md"
 requires-python = ">=3.14"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Vashistha Iyer", email = "iy3rvashistha@gmail.com" },
+]
+keywords = ["fsm", "state-machine", "event-driven", "type-safe", "dataclass"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/iy3r/rebalanced/tree/main/packages/fsm"
+Repository = "https://github.com/iy3r/rebalanced"
+Issues = "https://github.com/iy3r/rebalanced/issues"
 
 [build-system]
 requires = ["uv_build>=0.11.3,<0.12"]
