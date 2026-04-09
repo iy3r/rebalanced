@@ -9,7 +9,7 @@ license-files = ["LICENSE"]
 authors = [
     { name = "Vashistha Iyer", email = "iy3rvashistha@gmail.com" },
 ]
-keywords = ["fsm", "state-machine", "event-driven", "type-safe", "dataclass"]
+keywords = ["finance", "trading", "simulation", "backtesting", "portfolio", "market", "fsm", "state-machine", "event-driven"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

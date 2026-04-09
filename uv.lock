@@ -620,6 +620,7 @@ source = { editable = "." }
 dependencies = [
     { name = "rebalanced-core" },
     { name = "rebalanced-fsm" },
+    { name = "rebalanced-lens" },
 ]
 
 [package.dev-dependencies]
@@ -636,6 +637,7 @@ dev = [
 requires-dist = [
     { name = "rebalanced-core", editable = "packages/core" },
     { name = "rebalanced-fsm", editable = "packages/fsm" },
+    { name = "rebalanced-lens", editable = "packages/lens" },
 ]
 
 [package.metadata.requires-dev]
@@ -667,6 +669,12 @@ source = { editable = "packages/fsm" }
 name = "rebalanced-lens"
 version = "0.1.0"
 source = { editable = "packages/lens" }
+dependencies = [
+    { name = "polars" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "polars", specifier = ">=1.0.0" }]
 
 [[package]]
 name = "requests"

@@ -21,6 +21,7 @@ classifiers = [
 dependencies = [
     "rebalanced-core",
     "rebalanced-fsm",
+    "rebalanced-lens",
 ]
 
 [project.urls]
@@ -45,6 +46,7 @@ build-backend = "uv_build"
 [tool.uv.sources]
 rebalanced-core = { workspace = true }
 rebalanced-fsm = { workspace = true }
+rebalanced-lens = { workspace = true }
 
 [tool.uv.workspace]
 members = ["packages/*"]

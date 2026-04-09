@@ -7,7 +7,7 @@
 - Packages in `packages/*`, main namespace in `src/`
 
 ## Python Tooling
-uv, ruff, pytest; prefer dataclasses, Protocol, type hints.
+uv, ruff, **ty** (type checker, not mypy/pyright), pytest; prefer dataclasses, Protocol, type hints.
 
 ## Python Programming Inspirations
 Pragmatic elegance of Guido van Rossum, Tim Peters' Zen, Raymond Hettinger's "beautiful, idiomatic" style, David Beazley's deep internals knowledge, Luciano Ramalho's Pythonic fluency, and James Powell's metaprogramming expertise.
@@ -19,6 +19,7 @@ Pragmatic elegance of Guido van Rossum, Tim Peters' Zen, Raymond Hettinger's "be
 - For ad-hoc packages without modifying pyproject.toml: `uv run --with <pkg> python script.py`
 - For tools: `uv tool run --with <pkg> <tool>`
 - Multiple packages: `uv run --with numpy --with matplotlib python script.py`
+- Type checking: `uv run ty check <file>` (ty is the project's type checker, not mypy/pyright)
 
 ## Observed Code Patterns
 - dataclasses: use `frozen=True, slots=True`
